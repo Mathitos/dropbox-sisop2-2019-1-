@@ -38,6 +38,7 @@ void receive_file(char *file, int socket)
 //Upload file to remote directory
 void send_file(char *file, int socket)
 {
+  printf("entrou no send file");
   FILE *fp = fopen(file, "r");
   int n, count = 0;
   long int size = file_size(fp);
@@ -56,12 +57,14 @@ void send_file(char *file, int socket)
   // Valid file, starts the stream to the server
   else
   {
+    printf("achou o arquivo");
     TIMEINFO *newTime = (TIMEINFO *)malloc(sizeof(TIMEINFO));
     newTime->t0 = atoi(getClientTime());
     //envia a requisição ao servidor pedindo o seu horario
     newTime->ts = getTimeServer(socket);
     newTime->t1 = atoi(getClientTime());
     strcpy(last_modified, getCorrectTime(newTime));
+    printf("pegou o tempo do server");
     // After passes the size of the file to the server
     bufferSize = (unsigned char *)&size;
     n = write(socket, (void *)bufferSize, 4);
@@ -96,6 +99,8 @@ void client_loop(int socket)
     printf("client > ");
     fgets(buffer, 256, stdin);
 
+    printf("%s\n", buffer);
+
     if (strstr(buffer, "exit"))
     {
       close_connection(socket);
@@ -109,8 +114,10 @@ void client_loop(int socket)
         printf("Error sending upload command. \n");
       else
       {
+        printf("ate aqui foi\n");
         // Parsing the file name
         fileName = parseFilename(buffer);
+        printf("vai entrar no send file\n");
         send_file(fileName, socket);
       }
     }
