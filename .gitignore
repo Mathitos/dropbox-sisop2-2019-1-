@@ -1,0 +1,7 @@
+sync_dir_*
+client
+server
+fila2.o
+util.o
+libdropbox.a
+aux
